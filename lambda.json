@@ -1,0 +1,70 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "Hello": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "FunctionName": "AbhijitCFLambdaFunction",
+        "Handler": "lambda_python.lambda_handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "HelloRole",
+            "Arn"
+          ]
+        },
+        "Code": {
+          "S3Bucket": "abhijit-test-bucket-1",
+          "S3Key": "lambda_python.zip"
+        },
+        "Runtime": "python3.8",
+        "Timeout": 300
+      }
+    },
+    "HelloRole": {
+  "Type": "AWS::IAM::Role",
+  "Properties": {
+    "RoleName": "AbhijitRole",
+    "AssumeRolePolicyDocument": {
+      "Version": "2012-10-17",
+      "Statement": [{
+        "Effect": "Allow",
+        "Principal": {
+          "Service": [ "lambda.amazonaws.com" ]
+        },
+        "Action": [ "sts:AssumeRole" ]
+      }]
+    },
+    "Path": "/",
+    "Policies": [{
+      "PolicyName": "AWSLambdaBasicExecutionRole",
+      "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [{
+          "Effect": "Allow",
+          "Action": [
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents"
+          ],
+          "Resource": "*"
+        }]
+      }
+    },
+    {
+      "PolicyName": "AmazonS3FullAccess",
+      "PolicyDocument": {
+        "Version": "2012-10-17",
+        "Statement": [{
+          "Effect": "Allow",
+          "Action": "s3:*",
+          "Resource": [
+            "arn:aws:s3:::exchange-data-raw",
+            "arn:aws:s3:::exchange-data-raw/*"
+          ]
+        }]
+      }
+    }]
+  }
+}
+  }
+}
